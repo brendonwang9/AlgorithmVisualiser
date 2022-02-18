@@ -1,23 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+// import './App.css';
+import NavBar from "./components/NavBar.js"
+import Visualiser from "./components/Visualiser.js"
+import { useState } from "react"
 
 function App() {
+  var [array, setArray] = useState([0])
+  var [algorithm, setAlgorithm] = useState("Bubble-Sort")
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header>
+        <h1>Algorithm Visualiser</h1>
+        <NavBar array={array} setArray={setArray} algorithm={algorithm} setAlgorithm={setAlgorithm} />
       </header>
+      <Visualiser array={array} setArray={setArray} />
     </div>
   );
 }
