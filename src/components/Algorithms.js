@@ -1,3 +1,4 @@
+
 function getRandomInt(num) {
     return Math.floor(Math.random() * num)
 }
@@ -12,7 +13,7 @@ function createNewArray() {
 
 var newarray = createNewArray()
 
-function bubblesort(array) {
+function bubbleSort(array) {
     // swap on each comparison to bubble largest to top of array
     for (let j = 0; j < array.length - 1; j++) {
         for (let i = 0; i < array.length; i++) {
@@ -45,7 +46,7 @@ function selectionSort(array) {
 
 function insertionSort(array) {
     //assume sublist of 1 item is sorted and insert items into sorted sublist 1 at a time
-    for (i = 1; i < array.length; i++) {
+    for (let i = 1; i < array.length; i++) {
         var insertItemPosition = i
         var insertItemValue = array[i]
         while (insertItemValue < array[insertItemPosition - 1] && insertItemPosition > 0) {
@@ -70,7 +71,7 @@ function shellSort(array) {
     return array
 }
 function gapInsertionSort(array, start, gap) {
-    for (i = start + gap; i < array.length; i = i + gap) {
+    for (let i = start + gap; i < array.length; i = i + gap) {
         var insertItemPosition = i
         var insertItemValue = array[i]
         while (insertItemValue < array[insertItemPosition - gap] && insertItemPosition > 0) {
@@ -87,7 +88,7 @@ function quickSort(array, first = 0, last = 99) {
     // pivot value aims to divide array into half (smaller than and bigger than halves)
     // divide and conquer similar to merge sort from there 
     if (first < last) {
-        splitIndex = quickSortRecursive(array, first, last)
+        var splitIndex = quickSortRecursive(array, first, last)
         quickSort(array, first, splitIndex - 1)
         quickSort(array, splitIndex + 1, last)
     }
@@ -120,7 +121,7 @@ function mergeSort(array) {
     // requires extra memory for slicing arrays
     // compare and merge neighbouring arrays to build sorted array O(n)
     if (array.length > 1) {
-        mid = Math.floor(array.length / 2)
+        var mid = Math.floor(array.length / 2)
         var leftHalf = array.slice(0, mid)
         var rightHalf = array.slice(mid)
         mergeSort(leftHalf)
@@ -158,3 +159,14 @@ function mergeSort(array) {
 // quicksort is dependent on pivot value, choosing midpoint = O(nLogn) (each swap divides array by half), choosing edges = O(n^2) (each swap only moves one item to place)
 // mergesort is a stablesort so better for larger data structures
 // mergsort  can adapt to linked list/ larger lists easier
+
+var sortingAlgorithms = {
+    bubbleSort,
+    selectionSort,
+    insertionSort,
+    shellSort,
+    quickSort,
+    mergeSort
+}
+
+export default sortingAlgorithms

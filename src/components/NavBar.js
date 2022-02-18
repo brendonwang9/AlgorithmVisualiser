@@ -14,12 +14,26 @@ function NavBar({ array, setArray, algorithm, setAlgorithm }) {
         setArray(newArray)
     }
     function AlgorithmButtons() {
-
+        var allAlgorithms = ["Bubble-Sort", "Selection-Sort", "Insertion-Sort", "Shell-Sort", "Quick-Sort", "Merge-Sort"]
+        var algorithmButtons = []
+        for (let i = 0; i < allAlgorithms.length; i++) {
+            algorithmButtons.push(
+                <button
+                    key={i}
+                    onClick={() => setAlgorithm(allAlgorithms[i])}
+                >
+                    {allAlgorithms[i]}
+                </button>
+            )
+        }
+        return algorithmButtons
     }
     return (
         <nav>
             <button onClick={newArray}>New Array</button>
-            <AlgorithmButtons />
+            <div>
+                <AlgorithmButtons />
+            </div>
         </nav>
     )
 }
