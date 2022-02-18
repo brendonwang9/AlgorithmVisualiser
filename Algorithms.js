@@ -83,6 +83,9 @@ function gapInsertionSort(array, start, gap) {
 }
 
 function quickSort(array, first = 0, last = 99) {
+    // choose a pivot value and move pivot value to its correct position in array first
+    // pivot value aims to divide array into half (smaller than and bigger than halves)
+    // divide and conquer similar to merge sort from there 
     if (first < last) {
         splitIndex = quickSortRecursive(array, first, last)
         quickSort(array, first, splitIndex - 1)
@@ -91,7 +94,6 @@ function quickSort(array, first = 0, last = 99) {
     return array
 }
 function quickSortRecursive(array, first, last) {
-    // choose a pivot value and move pivot value to its correct position in array first
     var pivotValue = array[first]
     var leftIndex = first + 1
     var rightIndex = last
@@ -150,3 +152,9 @@ function mergeSort(array) {
     }
     return array
 }
+
+// merge sort vs quick sort
+// quicksort doesn't need extra memory as quicksort is in-place algorithm
+// quicksort is dependent on pivot value, choosing midpoint = O(nLogn) (each swap divides array by half), choosing edges = O(n^2) (each swap only moves one item to place)
+// mergesort is a stablesort so better for larger data structures
+// mergsort  can adapt to linked list/ larger lists easier
