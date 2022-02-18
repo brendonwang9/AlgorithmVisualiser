@@ -1,17 +1,17 @@
 
-function getRandomInt(num) {
-    return Math.floor(Math.random() * num)
-}
+// function getRandomInt(num) {
+//     return Math.floor(Math.random() * num)
+// }
 
-function createNewArray() {
-    var array = []
-    for (let i = 0; i < 100; i++) {
-        array.push(getRandomInt(100))
-    }
-    return array
-}
+// function createNewArray() {
+//     var array = []
+//     for (let i = 0; i < 100; i++) {
+//         array.push(getRandomInt(100))
+//     }
+//     return array
+// }
 
-var newarray = createNewArray()
+// var newarray = createNewArray()
 
 function bubbleSort(array) {
     // swap on each comparison to bubble largest to top of array
@@ -83,7 +83,7 @@ function gapInsertionSort(array, start, gap) {
     return array
 }
 
-function quickSort(array, first = 0, last = 99) {
+function quickSort(array, first = 0, last = 9) {
     // choose a pivot value and move pivot value to its correct position in array first
     // pivot value aims to divide array into half (smaller than and bigger than halves)
     // divide and conquer similar to merge sort from there 
