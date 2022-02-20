@@ -12,7 +12,7 @@ function App() {
         <h1>Algorithm Visualiser</h1>
         <NavBar array={array} setArray={setArray} algorithm={algorithm} setAlgorithm={setAlgorithm} />
       </header>
-      <Visualiser array={array} setArray={setArray} algorithm={algorithm} />
+      <Visualiser array={array} algorithm={algorithm} />
     </div>
   );
 }
