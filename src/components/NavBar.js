@@ -1,13 +1,13 @@
-// import "NavBar.css"
+import "./NavBar.css"
 
 
-function NavBar({ array, setArray, algorithm, setAlgorithm }) {
+function NavBar({ size, setArray, setAlgorithm }) {
     function getRandomInt(num) {
         return Math.floor(Math.random() * num)
     }
     function newArray() {
         var newArray = []
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < size; i++) {
             newArray.push(getRandomInt(100))
         }
         console.log("setting newarray")
@@ -31,9 +31,7 @@ function NavBar({ array, setArray, algorithm, setAlgorithm }) {
     return (
         <nav>
             <button onClick={newArray}>New Array</button>
-            <div>
-                <AlgorithmButtons />
-            </div>
+            <AlgorithmButtons />
         </nav>
     )
 }

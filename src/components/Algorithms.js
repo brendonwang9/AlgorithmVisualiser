@@ -27,7 +27,7 @@ function bubbleSort(array) {
                 array[i] = array[i + 1]
                 array[i + 1] = temp
             }
-            if (i == unsortedArrayLength - 1) {
+            if (i === unsortedArrayLength - 1) {
                 operations.push({ idxs: [unsortedArrayLength, 0], action: "complete" })
             } // last item of unsorted array will be largest 
             else {
@@ -107,7 +107,7 @@ function gapInsertionSort(array, start, gap, operations) {
         array[insertItemPosition] = insertItemValue
         operations.push({ idxs: [insertItemPosition, insertItemValue], action: "assign" })
     }
-    if (gap == 1) {
+    if (gap === 1) {
         for (let i = array.length - 1; i >= 0; i--) {
             operations.push({ idxs: [i], action: "complete" })
         }
@@ -115,7 +115,7 @@ function gapInsertionSort(array, start, gap, operations) {
     return array
 }
 
-function quickSort(array, first = 0, last = 29, operations = []) {
+function quickSort(array, first = 0, last = 49, operations = []) {
     // choose a pivot value and move pivot value to its final position in sorted array (quicksort recursive)
     // pivot value divides array into two (smaller than and bigger than halves)
     // ideally, pivot value is the middle value as it will divide array by half with each pivot O(logn)
@@ -127,7 +127,7 @@ function quickSort(array, first = 0, last = 29, operations = []) {
     }
     // in cases where first == last the item array has a length of 1 which is assumed to be sorted in its correct position
     // we must account for this assumption in our visualiser to complete color
-    if (first == last) {
+    if (first === last) {
         operations.push({ idxs: [first], action: "complete" })
     }
     return operations
@@ -178,7 +178,6 @@ function mergeSort(array, operations = []) {
         var iRight = 0
         var iMerged = 0
         while (iLeft < leftHalf.length && iRight < rightHalf.length) {
-            // console.log((splittingCounter - leftHalf.length - rightHalf.length) + " counter on the " + leftHalf)
             if (leftHalf[iLeft] <= rightHalf[iRight]) {
                 operations.push({
                     idxs: [
@@ -187,7 +186,7 @@ function mergeSort(array, operations = []) {
                     ],
                     action: "assign"
                 })
-                if (array.length == 30) {
+                if (array.length === 50) {
                     operations.push({
                         idxs: [
                             splittingCounter - rightHalf.length - leftHalf.length + iMerged
@@ -207,7 +206,7 @@ function mergeSort(array, operations = []) {
                     ],
                     action: "assign"
                 })
-                if (array.length == 30) {
+                if (array.length === 50) {
                     operations.push({
                         idxs: [
                             splittingCounter - rightHalf.length - leftHalf.length + iMerged
@@ -231,7 +230,7 @@ function mergeSort(array, operations = []) {
                 ],
                 action: "assign"
             })
-            if (array.length == 30) {
+            if (array.length === 50) {
                 operations.push({
                     idxs: [
                         splittingCounter - rightHalf.length - leftHalf.length + iMerged
@@ -251,7 +250,7 @@ function mergeSort(array, operations = []) {
                 ],
                 action: "assign"
             })
-            if (array.length == 30) {
+            if (array.length === 50) {
                 operations.push({
                     idxs: [
                         splittingCounter - rightHalf.length - leftHalf.length + iMerged
@@ -265,10 +264,11 @@ function mergeSort(array, operations = []) {
         }
     } else {
         splittingCounter++
+        console.log(splittingCounter)
         // this counter increments if the split arrayLengths == 1, and will therefore indicate which position of the parent array we're on
         // the position of the parent array is hard to get because during recursion the parent array is split into smaller arrays and the smaller array indexes do not correspond to the final positions 
     }
-    if (splittingCounter == 30 && array.length == 30) {
+    if (splittingCounter === 50 && array.length === 50) {
         splittingCounter = 0 // reset the splittingCounter at the last recursive call
     }
     return operations
