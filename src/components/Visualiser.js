@@ -1,7 +1,7 @@
 import "./Visualiser.css"
 import sortingAlgorithms from "./Algorithms"
 
-const SPEED = 20
+const SPEED = 10
 function Visualiser({ array, algorithm }) {
     function ArrayBars() {
         var divArray = []
@@ -58,14 +58,17 @@ function Visualiser({ array, algorithm }) {
             } else if (operations[i].action === "complete") {
                 var [bar1idx] = operations[i].idxs
                 var bar1 = arrayBars[bar1idx].style
+                bar1.backgroundColor = "blue"
+                await sleep(SPEED)
                 bar1.backgroundColor = "green"
             } else if (operations[i].action === "assign") {
                 var height = bar2idx + "px"
+                currentColorB1 = bar1.backgroundColor
                 bar1.backgroundColor = "blue"
                 await sleep(SPEED)
                 bar1.height = height
                 await sleep(SPEED)
-                bar1.backgroundColor = "red"
+                bar1.backgroundColor = currentColorB1
             }
         }
     }
