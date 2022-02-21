@@ -13,11 +13,15 @@
 
 // var newarray = createNewArray()
 
-// example:
+// examples :
 // var operations = [
 //     {
 //         idxs: [i, j],
 //         action: "compare or swap"
+//     },
+//     {
+//         idxs: [i, height],
+//         action: "assign"
 //     },
 //     {
 //         idxs: [i],
@@ -155,42 +159,114 @@ function quickSortRecursive(array, first, last) {
     return rightIndex
 }
 
-function mergeSort(array) {
+var splittingCounter = 0
+// shouldve split mergesort into a helper function and recursive to make calculating splitcounter easier*
+function mergeSort(array, operations = []) {
     // split array at midpoint recursively until all items are in single length arrays (single legnth arrays are sorted by definition) O(log n)
-    // requires extra memory for slicing arrays
-    // compare and merge neighbouring arrays to build sorted array O(n)
+    // * requires significant extra memory for slicing arrays
+    // compare (merge) neighbouring arrays to build sorted array O(n)
     if (array.length > 1) {
         var mid = Math.floor(array.length / 2)
         var leftHalf = array.slice(0, mid)
         var rightHalf = array.slice(mid)
-        mergeSort(leftHalf)
-        mergeSort(rightHalf)
-
+        mergeSort(leftHalf, operations)
+        mergeSort(rightHalf, operations)
         var iLeft = 0
         var iRight = 0
-        var iSorting = 0
+        var iMerged = 0
         while (iLeft < leftHalf.length && iRight < rightHalf.length) {
+            // console.log((splittingCounter - leftHalf.length - rightHalf.length) + " counter on the " + leftHalf)
             if (leftHalf[iLeft] <= rightHalf[iRight]) {
-                array[iSorting] = leftHalf[iLeft]
+                operations.push({
+                    idxs: [
+                        splittingCounter - rightHalf.length - leftHalf.length + iMerged,
+                        leftHalf[iLeft]
+                    ],
+                    action: "assign"
+                })
+                if (array.length == 30) {
+                    operations.push({
+                        idxs: [
+                            splittingCounter - rightHalf.length - leftHalf.length + iMerged
+                        ],
+                        action: "complete"
+                    })
+                }
+                array[iMerged] = leftHalf[iLeft]
                 iLeft++
             } else {
-                array[iSorting] = rightHalf[iRight]
+                operations.push({
+                    idxs: [
+                        splittingCounter - rightHalf.length - leftHalf.length + iMerged,
+                        rightHalf[iRight]
+                    ],
+                    action: "assign"
+                })
+                if (array.length == 30) {
+                    operations.push({
+                        idxs: [
+                            splittingCounter - rightHalf.length - leftHalf.length + iMerged
+                        ],
+                        action: "complete"
+                    })
+                }
+                array[iMerged] = rightHalf[iRight]
                 iRight++
             }
-            iSorting++
+            iMerged++
         }
+        // any items remaining in left/right half are inserted as last item(s) in merged array
         while (iLeft < leftHalf.length) {
-            array[iSorting] = leftHalf[iLeft]
+            // splittingCounter will tell us how many 1 length arrays exist, so for the very first merge splittingCounter = 2
+            // we can subtract left/rightHalf lengths to get the position on the parent array  
+            operations.push({
+                idxs: [
+                    splittingCounter - rightHalf.length - leftHalf.length + iMerged,
+                    leftHalf[iLeft]
+                ],
+                action: "assign"
+            })
+            if (array.length == 30) {
+                operations.push({
+                    idxs: [
+                        splittingCounter - rightHalf.length - leftHalf.length + iMerged
+                    ],
+                    action: "complete"
+                })
+            }
+            array[iMerged] = leftHalf[iLeft]
             iLeft++
-            iSorting++
+            iMerged++
         }
         while (iRight < rightHalf.length) {
-            array[iSorting] = rightHalf[iRight]
+            operations.push({
+                idxs: [
+                    splittingCounter - rightHalf.length - leftHalf.length + iMerged,
+                    rightHalf[iRight]
+                ],
+                action: "assign"
+            })
+            if (array.length == 30) {
+                operations.push({
+                    idxs: [
+                        splittingCounter - rightHalf.length - leftHalf.length + iMerged
+                    ],
+                    action: "complete"
+                })
+            }
+            array[iMerged] = rightHalf[iRight]
             iRight++
-            iSorting++
+            iMerged++
         }
+    } else {
+        splittingCounter++
+        // this counter increments if the split arrayLengths == 1, and will therefore indicate which position of the parent array we're on
+        // the position of the parent array is hard to get because during recursion the parent array is split into smaller arrays and the smaller array indexes do not correspond to the final positions 
     }
-    return array
+    if (splittingCounter == 30 && array.length == 30) {
+        splittingCounter = 0 // reset the splittingCounter at the last recursive call
+    }
+    return operations
 }
 
 // merge sort vs quick sort

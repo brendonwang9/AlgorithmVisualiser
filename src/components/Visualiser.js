@@ -1,8 +1,7 @@
 import "./Visualiser.css"
 import sortingAlgorithms from "./Algorithms"
-import runAnimations from "./Animations.js"
-// import { useEffect } from "react"
-const SPEED = 100
+
+const SPEED = 20
 function Visualiser({ array, algorithm }) {
     function ArrayBars() {
         var divArray = []
@@ -34,7 +33,7 @@ function Visualiser({ array, algorithm }) {
             // can heavily refactor this
             var [bar1idx, bar2idx] = operations[i].idxs
             var bar1 = arrayBars[bar1idx].style
-            if (operations[i].action == "compare") {
+            if (operations[i].action === "compare") {
                 var bar2 = arrayBars[bar2idx].style
                 var currentColorB1 = bar1.backgroundColor
                 var currentColorB2 = bar1.backgroundColor
@@ -43,7 +42,7 @@ function Visualiser({ array, algorithm }) {
                 await sleep(SPEED)
                 bar1.backgroundColor = currentColorB1
                 bar2.backgroundColor = currentColorB2
-            } else if (operations[i].action == "swap") {
+            } else if (operations[i].action === "swap") {
                 var bar2 = arrayBars[bar2idx].style
                 var currentColorB1 = bar1.backgroundColor
                 var currentColorB2 = bar1.backgroundColor
@@ -56,12 +55,18 @@ function Visualiser({ array, algorithm }) {
                 await sleep(SPEED)
                 bar1.backgroundColor = currentColorB1
                 bar2.backgroundColor = currentColorB2
-            } else if (operations[i].action == "complete") {
+            } else if (operations[i].action === "complete") {
                 var [bar1idx] = operations[i].idxs
                 var bar1 = arrayBars[bar1idx].style
                 bar1.backgroundColor = "green"
+            } else if (operations[i].action === "assign") {
+                var height = bar2idx + "px"
+                bar1.backgroundColor = "blue"
+                await sleep(SPEED)
+                bar1.height = height
+                await sleep(SPEED)
+                bar1.backgroundColor = "red"
             }
-
         }
     }
     function sleep(time) {
