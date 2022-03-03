@@ -8,7 +8,7 @@ export default function Sliders({ speed, setSpeed, size, setSize }) {
     return (
         <div>
             <span>
-                Speed
+                Animation Speed
             </span>
             <input
                 onChange={onSetSpeed}

@@ -18,7 +18,7 @@ function App() {
       </header>
       <br></br>
       <div>
-        <p> Sorting with {algorithm}</p>
+        <p>{algorithm}</p>
         <Visualiser array={array} algorithm={algorithm} speed={speed} size={size} />
         <Sliders speed={speed} setSpeed={setSpeed} size={size} setSize={setSize} />
       </div>
