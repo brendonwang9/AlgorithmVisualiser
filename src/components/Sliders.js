@@ -24,9 +24,9 @@ export default function Sliders({ speed, setSpeed, size, setSize }) {
             <input
                 onChange={onSetSize}
                 type="range"
-                min="10"
-                max='100'
-                step="10"
+                min="30"
+                max='80'
+                step="5"
                 value={size}
             />
         </div>

@@ -16,7 +16,7 @@
 
 
 function bubbleSort(array) {
-    // swap on each comparison to bubble largest to top of array
+    // swap on each comparison bubbling largest item to top of array
     var operations = []
     for (let j = 1; j <= array.length; j++) {
         var unsortedArrayLength = array.length - j
@@ -35,7 +35,7 @@ function bubbleSort(array) {
             }
         }
     }
-    operations.push({ idxs: [0], action: "complete" }) // last item remaining is smallest num
+    operations.push({ idxs: [0], action: "complete" }) // last item remaining is always smallest num
     return operations
 }
 
@@ -62,7 +62,7 @@ function selectionSort(array) {
 }
 
 function insertionSort(array, operations = []) {
-    //assume sublist of 1 item is sorted and insert items into sorted sublist 1 at a time
+    // assume sublist of 1 item is sorted and insert items into sorted sublist 1 at a time
     // default variable to make shell sort easier
     for (let i = 1; i < array.length; i++) {
         var insertItemPosition = i
@@ -75,7 +75,7 @@ function insertionSort(array, operations = []) {
         operations.push({ idxs: [insertItemPosition, insertItemValue], action: "assign" })
         array[insertItemPosition] = insertItemValue
     }
-    // we dont know the final positions of the items until the last round is complete as the final item could be the smallest, moving all other idx + 1
+    // we dont know the final positions of the items until the last round of sorting is complete as the final item could be the smallest, shifting all other items
     for (let i = array.length - 1; i >= 0; i--) {
         operations.push({ idxs: [i], action: "complete" })
     }
@@ -115,7 +115,7 @@ function gapInsertionSort(array, start, gap, operations) {
     return array
 }
 
-function quickSort(array, first = 0, last = 49, operations = []) {
+function quickSort(array, first, last, operations = []) {
     // choose a pivot value and move pivot value to its final position in sorted array (quicksort recursive)
     // pivot value divides array into two (smaller than and bigger than halves)
     // ideally, pivot value is the middle value as it will divide array by half with each pivot O(logn)
@@ -163,17 +163,18 @@ function quickSortRecursive(array, first, last, operations) {
 }
 
 var splittingCounter = 0
-// should split mergesort into a helper function and recursive to make calculating splitcounter easier*
-function mergeSort(array, operations = []) {
-    // split array at midpoint recursively until all items are in single length arrays (single legnth arrays are sorted by definition) O(log n)
+// should split mergesort into a helper and recursive function to separate control/recursive variables (splitcounter)*
+function mergeSort(array, size, operations = []) {
+    console.log(size)
+    // split array at midpoint recursively O(log n) until all items are in single length arrays (single legnth arrays are sorted by definition) 
     // * requires significant extra memory for slicing arrays
     // compare (merge) neighbouring arrays to build sorted array O(n)
     if (array.length > 1) {
         var mid = Math.floor(array.length / 2)
         var leftHalf = array.slice(0, mid)
         var rightHalf = array.slice(mid)
-        mergeSort(leftHalf, operations)
-        mergeSort(rightHalf, operations)
+        mergeSort(leftHalf, size, operations)
+        mergeSort(rightHalf, size, operations)
         var iLeft = 0
         var iRight = 0
         var iMerged = 0
@@ -186,7 +187,7 @@ function mergeSort(array, operations = []) {
                     ],
                     action: "assign"
                 })
-                if (array.length === 50) {
+                if (array.length === size) {
                     operations.push({
                         idxs: [
                             splittingCounter - rightHalf.length - leftHalf.length + iMerged
@@ -206,7 +207,7 @@ function mergeSort(array, operations = []) {
                     ],
                     action: "assign"
                 })
-                if (array.length === 50) {
+                if (array.length === size) {
                     operations.push({
                         idxs: [
                             splittingCounter - rightHalf.length - leftHalf.length + iMerged
@@ -223,6 +224,7 @@ function mergeSort(array, operations = []) {
         while (iLeft < leftHalf.length) {
             // splittingCounter will tell us how many 1 length arrays exist, so for the very first merge splittingCounter = 2
             // we can subtract left/rightHalf lengths to get the position on the parent array  
+            // iMerged ill give us the current index of item between the left/right halves
             operations.push({
                 idxs: [
                     splittingCounter - rightHalf.length - leftHalf.length + iMerged,
@@ -230,7 +232,7 @@ function mergeSort(array, operations = []) {
                 ],
                 action: "assign"
             })
-            if (array.length === 50) {
+            if (array.length === size) {
                 operations.push({
                     idxs: [
                         splittingCounter - rightHalf.length - leftHalf.length + iMerged
@@ -250,7 +252,7 @@ function mergeSort(array, operations = []) {
                 ],
                 action: "assign"
             })
-            if (array.length === 50) {
+            if (array.length === size) {
                 operations.push({
                     idxs: [
                         splittingCounter - rightHalf.length - leftHalf.length + iMerged
@@ -263,13 +265,12 @@ function mergeSort(array, operations = []) {
             iMerged++
         }
     } else {
+        // this counter increments if the split arrayLength == 1,  and will help indicate which position of the parent array we're on for visualiser operations
         splittingCounter++
-        console.log(splittingCounter)
-        // this counter increments if the split arrayLengths == 1, and will therefore indicate which position of the parent array we're on
-        // the position of the parent array is hard to get because during recursion the parent array is split into smaller arrays and the smaller array indexes do not correspond to the final positions 
+        // the indexes of the items queued for operations need to be based on the parent array, these are hard to get because during recursion the parent array is split into smaller arrays and the smaller array indexes do not correspond to the parent index positions. SplittingCounter can help us get the index as it indicates how many final splits have occured
     }
-    if (splittingCounter === 50 && array.length === 50) {
-        splittingCounter = 0 // reset the splittingCounter at the last recursive call
+    if (splittingCounter === size && array.length === size) {
+        splittingCounter = 0 // reset the splittingCounter after the last recursive call for another sort
     }
     return operations
 }

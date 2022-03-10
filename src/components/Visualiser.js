@@ -26,16 +26,17 @@ function Visualiser({ array, algorithm, speed, size }) {
         runAlgorithm(sortingAlgorithms[refactorAlgo])
     }
     async function runAlgorithm(sortingFunction) {
-        // var operations = []
-        // if (sortingFunction.name == "quickSort") {
-        //     console.log(size - 1)
-        //     operations = sortingFunction(array.map(num => num), 0, Number(size))
-        // }
-        // if (sortingFunction.name == "mergeSort") {
-        //     console.log("mergesorting")
-        //     operations = sortingFunction(array.map(num => num))
-        // }
-        var operations = sortingFunction(array.map(num => num))
+        var operations = []
+        if (sortingFunction.name == "quickSort") {
+            var arraySize = Number(size - 1)
+            operations = sortingFunction(array.map(num => num), 0, arraySize)
+        }
+        if (sortingFunction.name == "mergeSort") {
+            var arraySize = Number(size)
+            console.log(arraySize)
+            operations = sortingFunction(array.map(num => num), arraySize)
+        }
+        // var operations = sortingFunction(array.map(num => num), size)
         var arrayBars = document.querySelectorAll(".bars")
         console.log(operations)
         for (let i = 0; i < operations.length; i++) {
