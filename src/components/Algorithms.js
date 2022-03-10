@@ -1,4 +1,4 @@
-// examples of return value
+// examples of final operations return value
 // var operations = [
 //     {
 //         idxs: [i, j],
@@ -14,6 +14,13 @@
 //     }
 // ]
 
+// Operations building functions 
+function Operator(action, operations, idx1, idx2 = 0) {
+    operations.push({
+        idxs: [idx1, idx2],
+        action: action
+    })
+}
 
 function bubbleSort(array) {
     // swap on each comparison bubbling largest item to top of array
@@ -22,20 +29,21 @@ function bubbleSort(array) {
         var unsortedArrayLength = array.length - j
         for (let i = 0; i < unsortedArrayLength; i++) {
             if (array[i] > array[i + 1]) {
-                operations.push({ idxs: [i, i + 1], action: "swap" })
+                Operator("swap", operations, i, i + 1)
                 var temp = array[i]
                 array[i] = array[i + 1]
                 array[i + 1] = temp
             }
             if (i === unsortedArrayLength - 1) {
-                operations.push({ idxs: [unsortedArrayLength, 0], action: "complete" })
+                Operator("complete", operations, unsortedArrayLength)
             } // last item of unsorted array will be largest 
             else {
-                operations.push({ idxs: [i, i + 1], action: "compare" })
+                Operator("compare", operations, i, i + 1)
             }
         }
     }
-    operations.push({ idxs: [0], action: "complete" }) // last item remaining is always smallest num
+    Operator("complete", operations, 0)
+    // last item remaining is always smallest num
     return operations
 }
 
@@ -46,18 +54,18 @@ function selectionSort(array) {
         var maxNumPosition = 0
         var unsortedArrayLength = array.length - j
         for (let i = 1; i <= unsortedArrayLength; i++) {
-            operations.push({ idxs: [i, maxNumPosition], action: "compare" })
+            Operator("compare", operations, i, maxNumPosition)
             if (array[i] > array[maxNumPosition]) {
                 maxNumPosition = i
             }
         }
-        operations.push({ idxs: [unsortedArrayLength, maxNumPosition], action: "swap" })
+        Operator("swap", operations, unsortedArrayLength, maxNumPosition)
         var temp = array[maxNumPosition]
         array[maxNumPosition] = array[unsortedArrayLength]
         array[unsortedArrayLength] = temp
-        operations.push({ idxs: [unsortedArrayLength], action: "complete" })
+        Operator("complete", operations, unsortedArrayLength)
     }
-    operations.push({ idxs: [0], action: "complete" })
+    Operator("complete", operations, 0)
     return operations
 }
 
@@ -68,16 +76,16 @@ function insertionSort(array, operations = []) {
         var insertItemPosition = i
         var insertItemValue = array[i]
         while (insertItemValue < array[insertItemPosition - 1] && insertItemPosition > 0) {
-            operations.push({ idxs: [insertItemPosition, array[insertItemPosition - 1]], action: "assign" })
+            Operator("assign", operations, insertItemPosition, array[insertItemPosition - 1])
             array[insertItemPosition] = array[insertItemPosition - 1]
             insertItemPosition--
         }
-        operations.push({ idxs: [insertItemPosition, insertItemValue], action: "assign" })
+        Operator("assign", operations, insertItemPosition, insertItemValue)
         array[insertItemPosition] = insertItemValue
     }
     // we dont know the final positions of the items until the last round of sorting is complete as the final item could be the smallest, shifting all other items
     for (let i = array.length - 1; i >= 0; i--) {
-        operations.push({ idxs: [i], action: "complete" })
+        Operator("complete", operations, i)
     }
     return operations
 }
@@ -100,16 +108,16 @@ function gapInsertionSort(array, start, gap, operations) {
         var insertItemPosition = i
         var insertItemValue = array[i]
         while (insertItemValue < array[insertItemPosition - gap] && insertItemPosition > 0) {
-            operations.push({ idxs: [insertItemPosition, array[insertItemPosition - gap]], action: "assign" })
+            Operator("assign", operations, insertItemPosition, array[insertItemPosition - gap])
             array[insertItemPosition] = array[insertItemPosition - gap]
             insertItemPosition = insertItemPosition - gap
         }
         array[insertItemPosition] = insertItemValue
-        operations.push({ idxs: [insertItemPosition, insertItemValue], action: "assign" })
+        Operator("assign", operations, insertItemPosition, insertItemValue)
     }
     if (gap === 1) {
         for (let i = array.length - 1; i >= 0; i--) {
-            operations.push({ idxs: [i], action: "complete" })
+            Operator("complete", operations, i)
         }
     }
     return array
@@ -128,7 +136,7 @@ function quickSort(array, first, last, operations = []) {
     // in cases where first == last the item array has a length of 1 which is assumed to be sorted in its correct position
     // we must account for this assumption in our visualiser to complete color
     if (first === last) {
-        operations.push({ idxs: [first], action: "complete" })
+        Operator("complete", operations, last)
     }
     return operations
 }
@@ -139,33 +147,38 @@ function quickSortRecursive(array, first, last, operations) {
     while (leftIndex <= rightIndex) {
         // increment left/right index so that (leftvalues < pivotvalue < rightvalues)
         while (pivotValue >= array[leftIndex] && leftIndex <= rightIndex) {
-            operations.push({ idxs: [first, leftIndex], action: "compare" })
+            Operator("compare", operations, first, leftIndex)
             leftIndex++
         }
         while (array[first] <= array[rightIndex] && leftIndex <= rightIndex) {
-            operations.push({ idxs: [first, rightIndex], action: "compare" })
+            Operator("compare", operations, first, rightIndex)
             rightIndex--
         }
         // swap left/right values if they are in the wrong order 
         if (rightIndex >= leftIndex) {
-            operations.push({ idxs: [leftIndex, rightIndex], action: "swap" })
+            Operator("swap", operations, leftIndex, rightIndex)
             var temp = array[leftIndex]
             array[leftIndex] = array[rightIndex]
             array[rightIndex] = temp
         }
     }
     //if all items are in the correct left/right halves, indexes will cross at the index that pivotvalue should be placed 
-    operations.push({ idxs: [first, rightIndex], action: "swap" })
+    Operator("swap", operations, first, rightIndex)
     array[first] = array[rightIndex]
     array[rightIndex] = pivotValue
-    operations.push({ idxs: [rightIndex], action: "complete" })
+    Operator("complete", operations, rightIndex)
     return rightIndex
 }
+
+// merge sort vs quick sort
+// quicksort doesn't need extra memory as quicksort is in-place algorithm
+// quicksort is dependent on pivot value, choosing midpoint = O(nLogn) (each swap divides array by half), choosing edges = O(n^2) (each swap only moves one item to place)
+// mergesort is a stablesort so better for larger data structures
+// mergsort  can adapt to linked list/ larger lists easier
 
 var splittingCounter = 0
 // should split mergesort into a helper and recursive function to separate control/recursive variables (splitcounter)*
 function mergeSort(array, size, operations = []) {
-    console.log(size)
     // split array at midpoint recursively O(log n) until all items are in single length arrays (single legnth arrays are sorted by definition) 
     // * requires significant extra memory for slicing arrays
     // compare (merge) neighbouring arrays to build sorted array O(n)
@@ -180,40 +193,16 @@ function mergeSort(array, size, operations = []) {
         var iMerged = 0
         while (iLeft < leftHalf.length && iRight < rightHalf.length) {
             if (leftHalf[iLeft] <= rightHalf[iRight]) {
-                operations.push({
-                    idxs: [
-                        splittingCounter - rightHalf.length - leftHalf.length + iMerged,
-                        leftHalf[iLeft]
-                    ],
-                    action: "assign"
-                })
+                Operator("assign", operations, splittingCounter - rightHalf.length - leftHalf.length + iMerged, leftHalf[iLeft])
                 if (array.length === size) {
-                    operations.push({
-                        idxs: [
-                            splittingCounter - rightHalf.length - leftHalf.length + iMerged
-                        ],
-                        action: "complete"
-                    })
-                } else {
-
+                    Operator("complete", operations, splittingCounter - rightHalf.length - leftHalf.length + iMerged)
                 }
                 array[iMerged] = leftHalf[iLeft]
                 iLeft++
             } else {
-                operations.push({
-                    idxs: [
-                        splittingCounter - rightHalf.length - leftHalf.length + iMerged,
-                        rightHalf[iRight]
-                    ],
-                    action: "assign"
-                })
+                Operator("assign", operations, splittingCounter - rightHalf.length - leftHalf.length + iMerged, rightHalf[iRight])
                 if (array.length === size) {
-                    operations.push({
-                        idxs: [
-                            splittingCounter - rightHalf.length - leftHalf.length + iMerged
-                        ],
-                        action: "complete"
-                    })
+                    Operator("complete", operations, splittingCounter - rightHalf.length - leftHalf.length + iMerged)
                 }
                 array[iMerged] = rightHalf[iRight]
                 iRight++
@@ -225,40 +214,18 @@ function mergeSort(array, size, operations = []) {
             // splittingCounter will tell us how many 1 length arrays exist, so for the very first merge splittingCounter = 2
             // we can subtract left/rightHalf lengths to get the position on the parent array  
             // iMerged ill give us the current index of item between the left/right halves
-            operations.push({
-                idxs: [
-                    splittingCounter - rightHalf.length - leftHalf.length + iMerged,
-                    leftHalf[iLeft]
-                ],
-                action: "assign"
-            })
+            Operator("assign", operations, splittingCounter - rightHalf.length - leftHalf.length + iMerged, leftHalf[iLeft])
             if (array.length === size) {
-                operations.push({
-                    idxs: [
-                        splittingCounter - rightHalf.length - leftHalf.length + iMerged
-                    ],
-                    action: "complete"
-                })
+                Operator("complete", operations, splittingCounter - rightHalf.length - leftHalf.length + iMerged)
             }
             array[iMerged] = leftHalf[iLeft]
             iLeft++
             iMerged++
         }
         while (iRight < rightHalf.length) {
-            operations.push({
-                idxs: [
-                    splittingCounter - rightHalf.length - leftHalf.length + iMerged,
-                    rightHalf[iRight]
-                ],
-                action: "assign"
-            })
+            Operator("assign", operations, splittingCounter - rightHalf.length - leftHalf.length + iMerged, rightHalf[iRight])
             if (array.length === size) {
-                operations.push({
-                    idxs: [
-                        splittingCounter - rightHalf.length - leftHalf.length + iMerged
-                    ],
-                    action: "complete"
-                })
+                Operator("complete", operations, splittingCounter - rightHalf.length - leftHalf.length + iMerged)
             }
             array[iMerged] = rightHalf[iRight]
             iRight++
@@ -274,12 +241,6 @@ function mergeSort(array, size, operations = []) {
     }
     return operations
 }
-
-// merge sort vs quick sort
-// quicksort doesn't need extra memory as quicksort is in-place algorithm
-// quicksort is dependent on pivot value, choosing midpoint = O(nLogn) (each swap divides array by half), choosing edges = O(n^2) (each swap only moves one item to place)
-// mergesort is a stablesort so better for larger data structures
-// mergsort  can adapt to linked list/ larger lists easier
 
 var sortingAlgorithms = {
     bubbleSort,

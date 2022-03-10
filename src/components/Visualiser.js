@@ -2,7 +2,7 @@ import "./Visualiser.css"
 import sortingAlgorithms from "./Algorithms"
 
 function Visualiser({ array, algorithm, speed, size }) {
-    const SPEED = 55 - speed
+    const SPEED = 51 - speed
     function ArrayBars() {
         var divArray = []
         for (let i = 0; i < array.length; i++) {
@@ -28,15 +28,15 @@ function Visualiser({ array, algorithm, speed, size }) {
     async function runAlgorithm(sortingFunction) {
         var operations = []
         if (sortingFunction.name == "quickSort") {
-            var arraySize = Number(size - 1)
+            var arraySize = Number(size) - 1
             operations = sortingFunction(array.map(num => num), 0, arraySize)
-        }
-        if (sortingFunction.name == "mergeSort") {
+        } else if (sortingFunction.name == "mergeSort") {
             var arraySize = Number(size)
             console.log(arraySize)
             operations = sortingFunction(array.map(num => num), arraySize)
+        } else {
+            var operations = sortingFunction(array.map(num => num))
         }
-        // var operations = sortingFunction(array.map(num => num), size)
         var arrayBars = document.querySelectorAll(".bars")
         console.log(operations)
         for (let i = 0; i < operations.length; i++) {
@@ -60,7 +60,9 @@ function Visualiser({ array, algorithm, speed, size }) {
                 await sleep(SPEED)
                 var temp = bar1.height
                 bar1.height = bar2.height
+                arrayBars[bar1idx].textContent = bar1.height.slice(0, -2)
                 bar2.height = temp
+                arrayBars[bar2idx].textContent = bar2.height.slice(0, -2)
                 await sleep(SPEED)
                 bar1.backgroundColor = currentColorB1
                 bar2.backgroundColor = currentColorB2
@@ -73,6 +75,7 @@ function Visualiser({ array, algorithm, speed, size }) {
                 bar1.backgroundColor = "blue"
                 await sleep(SPEED)
                 bar1.height = height
+                arrayBars[bar1idx].textContent = bar1.height.slice(0, -2)
                 await sleep(SPEED)
                 bar1.backgroundColor = currentColorB1
             }
