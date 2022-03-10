@@ -21,11 +21,15 @@ function Visualiser({ array, algorithm, speed, size }) {
         }
         return divArray
     }
+    function OperationCount(numOperations) {
+        var p = document.querySelector(".operationCount")
+        p.textContent = `Operation Count: ${numOperations}`
+    }
     function getAlgorithm(algorithm) {
         var refactorAlgo = algorithm[0].toLowerCase() + algorithm.replace("-", "").slice(1)
         runAlgorithm(sortingAlgorithms[refactorAlgo])
     }
-    async function runAlgorithm(sortingFunction) {
+    function runAlgorithm(sortingFunction) {
         var operations = []
         if (sortingFunction.name == "quickSort") {
             var arraySize = Number(size) - 1
@@ -37,47 +41,50 @@ function Visualiser({ array, algorithm, speed, size }) {
         } else {
             var operations = sortingFunction(array.map(num => num))
         }
+        animator(operations)
+    }
+    async function animator(operations) {
+        OperationCount(operations.length)
         var arrayBars = document.querySelectorAll(".bars")
         console.log(operations)
         for (let i = 0; i < operations.length; i++) {
-            // can heavily refactor this
             var [bar1idx, bar2idx] = operations[i].idxs
-            var bar1 = arrayBars[bar1idx].style
-            var currentColorB1 = bar1.backgroundColor
+            var bar1 = arrayBars[bar1idx]
+            var currentColorB1 = bar1.style.backgroundColor
+            if (operations[i].action != "assign") {
+                var bar2 = arrayBars[bar2idx]
+                var currentColorB2 = bar2.style.backgroundColor
+            } // during assign operator bar2idx == height value not index
             if (operations[i].action === "compare") {
-                var bar2 = arrayBars[bar2idx].style
-                var currentColorB2 = bar1.backgroundColor
-                bar1.backgroundColor = "blue"
-                bar2.backgroundColor = "blue"
+                bar1.style.backgroundColor = "blue"
+                bar2.style.backgroundColor = "blue"
                 await sleep(SPEED)
-                bar1.backgroundColor = currentColorB1
-                bar2.backgroundColor = currentColorB2
+                bar1.style.backgroundColor = currentColorB1
+                bar2.style.backgroundColor = currentColorB2
             } else if (operations[i].action === "swap") {
-                bar2 = arrayBars[bar2idx].style
-                currentColorB2 = bar1.backgroundColor
-                bar1.backgroundColor = "blue"
-                bar2.backgroundColor = "blue"
+                bar1.style.backgroundColor = "blue"
+                bar2.style.backgroundColor = "blue"
                 await sleep(SPEED)
-                var temp = bar1.height
-                bar1.height = bar2.height
-                arrayBars[bar1idx].textContent = bar1.height.slice(0, -2)
-                bar2.height = temp
-                arrayBars[bar2idx].textContent = bar2.height.slice(0, -2)
+                var temp = bar1.style.height
+                bar1.style.height = bar2.style.height
+                bar1.textContent = bar1.style.height.slice(0, -2)
+                bar2.style.height = temp
+                bar2.textContent = bar2.style.height.slice(0, -2)
                 await sleep(SPEED)
-                bar1.backgroundColor = currentColorB1
-                bar2.backgroundColor = currentColorB2
-            } else if (operations[i].action === "complete") {
-                bar1.backgroundColor = "blue"
-                await sleep(SPEED)
-                bar1.backgroundColor = "green"
+                bar1.style.backgroundColor = currentColorB1
+                bar2.style.backgroundColor = currentColorB2
             } else if (operations[i].action === "assign") {
                 var height = bar2idx + "px"
-                bar1.backgroundColor = "blue"
+                bar1.style.backgroundColor = "blue"
                 await sleep(SPEED)
-                bar1.height = height
-                arrayBars[bar1idx].textContent = bar1.height.slice(0, -2)
+                bar1.style.height = height
+                bar1.textContent = bar1.style.height.slice(0, -2)
                 await sleep(SPEED)
-                bar1.backgroundColor = currentColorB1
+                bar1.style.backgroundColor = currentColorB1
+            } else if (operations[i].action === "complete") {
+                bar1.style.backgroundColor = "blue"
+                await sleep(SPEED)
+                bar1.style.backgroundColor = "green"
             }
         }
     }
@@ -93,7 +100,10 @@ function Visualiser({ array, algorithm, speed, size }) {
             <div className="visualiser-container">
                 <ArrayBars />
             </div>
-            <button onClick={() => getAlgorithm(algorithm)}>run</button>
+            <button onClick={() => getAlgorithm(algorithm)}>Visualise!</button>
+            <p className="operationCount">
+                Operation Count: -
+            </p>
         </>
     )
 }
