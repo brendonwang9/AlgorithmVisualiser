@@ -2,15 +2,15 @@
 // var operations = [
 //     {
 //         idxs: [i, j],
-//         action: "compare or swap"
+//         action: "compare"
 //     },
 //     {
 //         idxs: [i, height],
 //         action: "assign"
 //     },
 //     {
-//         idxs: [i],
-//         action: "complete"
+//         idxs: [i, j],
+//         action: "swap"
 //     }
 // ]
 

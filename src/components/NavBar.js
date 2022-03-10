@@ -1,5 +1,3 @@
-import "./NavBar.css"
-
 
 function NavBar({ size, setArray, setAlgorithm }) {
     function getRandomInt(num) {
